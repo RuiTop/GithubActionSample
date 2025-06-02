@@ -6,7 +6,7 @@ name: 天气预报推送
 on:
   schedule:
     # 设置启动时间，为 UTC 时间, UTC23点 对应北京时间早7点
-    # Edit history 2025/01/04, 2025/03/29, 2025/04/30
+    # Edit history 2025/01/04, 2025/03/29, 2025/04/30,2025/06/02
     - cron : '00 23 * * *'
   workflow_dispatch:
 
