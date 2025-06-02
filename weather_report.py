@@ -70,7 +70,7 @@ def get_access_token():
 
 def get_daily_love():
     # 每日一句情话
-    //url = "https://api.lovelive.tools/api/SweetNothings/Serialization/Json"
+    # url = "https://api.lovelive.tools/api/SweetNothings/Serialization/Json"
     url = "https://api.vvhan.com/api/text/love?type=json"
     r = requests.get(url)
     all_dict = json.loads(r.text)
