@@ -158,10 +158,19 @@ def get_daily_love():
             
             data = response.json()
             
-            if data.get("success") and data.get("data"):
-                return data["data"].get("content", "愿你拥有美好的一天！")
+            # 检查必要字段（成功时必须包含code和content）
+            required_fields = ["code", "content"]
+            if not all(field in data for field in required_fields):
+                missing = [f for f in required_fields if f not in data]
+                raise ValueError(f"API响应缺少必要字段: {missing}")
+            
+            # 1表示成功状态，直接返回content字段内容
+            if data.get("code") == 1:  # 若code为字符串类型则改为"1"
+                return data["content"]  # 成功时仅返回content，无默认文本
             else:
-                raise ValueError(f"API响应结构异常: {data}")
+                # 失败状态，msg为可选字段
+                error_msg = data.get("msg", "未知错误")
+                raise ValueError(f"API返回失败状态 (code: {data.get('code')}): {error_msg}")
                 
         except Exception as e:
             print(f"请求情话失败 (尝试 {attempt + 1}/{max_retries}): {e}")
