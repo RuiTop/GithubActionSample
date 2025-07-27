@@ -70,7 +70,6 @@ def get_access_token():
 
 
 def get_daily_love():
-    def get_daily_love():
     # 每日一句情话 - 按文档正确解析data.content字段
     url = "https://api.vvhan.com/api/text/love?type=json"  # 指定返回JSON格式
     max_retries = 3
