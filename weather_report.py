@@ -70,41 +70,38 @@ def get_access_token():
 
 
 def get_daily_love():
-     # 更换为新的情话API
-    url = "https://api.uomg.com/api/rand.qinghua?format=json"
+    def get_daily_love():
+    # 每日一句情话 - 按文档正确解析data.content字段
+    url = "https://api.vvhan.com/api/text/love?type=json"  # 指定返回JSON格式
     max_retries = 3
-    retry_delay = 2  # 重试间隔（秒）
+    retry_delay = 2
     
     for attempt in range(max_retries):
         try:
             response = requests.get(url, timeout=10)
-            response.raise_for_status()  # 检查HTTP状态码（如404、500等）
+            response.raise_for_status()  # 检查HTTP状态码
             
-            # 打印响应内容用于调试（可选）
+            # 打印原始响应（调试用）
             print(f"情话API响应: {response.text}")
             
-            # 检查响应是否为空
             if not response.text.strip():
                 raise ValueError("API返回空响应")
             
-            # 解析JSON数据
-            data = response.json()
+            data = response.json()  # 解析JSON
             
-            # 按新API格式判断：code=1表示成功，提取content字段
-            if data.get("code") == 1:
-                return data["content"]  # 直接返回content中的情话内容
+            # 按文档示例结构提取content字段
+            if data.get("success") and data.get("data"):
+                return data["data"]["content"]  # 正确路径：data.content
             else:
-                # API返回错误（如code!=1）
-                raise ValueError(f"API返回错误: {data.get('msg', '未知错误')}")
+                raise ValueError(f"API响应结构异常: {data}")
                 
         except (requests.exceptions.RequestException, json.JSONDecodeError, ValueError) as e:
             print(f"请求情话失败 (尝试 {attempt + 1}/{max_retries}): {e}")
-            # 如果不是最后一次尝试，等待后重试
             if attempt < max_retries - 1:
                 time.sleep(retry_delay)
     
-    # 所有重试失败时返回默认情话
-    return "山河远阔，人间烟火，无一是你，无一不是你。"
+    # 默认返回（失败时）
+    return "今日情话获取失败，愿你拥有美好的一天！"
 
 
 def send_weather(access_token, weather):
